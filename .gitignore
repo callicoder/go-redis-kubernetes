@@ -1,0 +1,4 @@
+go-redis-kubernetes
+out/
+vendor/
+_vendor-*
