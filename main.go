@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -12,7 +11,6 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/callicoder/go-docker-compose/model"
 	"github.com/go-redis/redis"
 	"github.com/gorilla/mux"
 )
@@ -51,7 +49,7 @@ func main() {
 		port     = string(getEnv("REDIS_PORT", "6379"))
 		password = getEnv("REDIS_PASSWORD", "")
 	)
-	fmt.Println(port)
+
 	client := redis.NewClient(&redis.Options{
 		Addr:     host + ":" + port,
 		Password: password,
@@ -104,7 +102,7 @@ func waitForShutdown(srv *http.Server) {
 	os.Exit(0)
 }
 
-func getQuoteFromAPI() (*model.QuoteResponse, error) {
+func getQuoteFromAPI() (*QuoteResponse, error) {
 	API_URL := "http://quotes.rest/qod.json"
 	resp, err := http.Get(API_URL)
 	if err != nil {
@@ -114,7 +112,7 @@ func getQuoteFromAPI() (*model.QuoteResponse, error) {
 	log.Println("Quote API Returned: ", resp.StatusCode, http.StatusText(resp.StatusCode))
 
 	if resp.StatusCode >= 200 && resp.StatusCode <= 299 {
-		quoteResp := &model.QuoteResponse{}
+		quoteResp := &QuoteResponse{}
 		json.NewDecoder(resp.Body).Decode(quoteResp)
 		return quoteResp, nil
 	} else {
